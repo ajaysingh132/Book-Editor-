@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Book Cover Generator</title>
+<style>
+#cover {
+  width: 600px;
+  height: 900px;
+  background: linear-gradient(#111, #444);
+  color: white;
+  padding: 40px;
+  font-family: Arial;
+}
+</style>
+</head>
+
+<body>
+
+<input id="title" placeholder="Book Title">
+<input id="author" placeholder="Author Name">
+<button onclick="generate()">Generate</button>
+
+<div id="cover">
+  <h1 id="t"></h1>
+  <h3 id="a"></h3>
+</div>
+
+<script>
+function generate(){
+  document.getElementById("t").innerText =
+    document.getElementById("title").value;
+  document.getElementById("a").innerText =
+    document.getElementById("author").value;
+}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<button onclick="downloadPDF()">Download PDF</button>
+
+<script>
+async function downloadPDF(){
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+
+  pdf.text("My Book Content", 10, 10);
+  pdf.save("book.pdf");
+}
+</script>
+</script>
+
+</body>
+</html>
