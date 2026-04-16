@@ -1,50 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Book Cover Generator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Generator</title>
+
 <style>
-#cover {
-  width: 600px;
-  height: 900px;
-  background: linear-gradient(#111, #444);
-  color: white;
-  padding: 40px;
+body {
   font-family: Arial;
+  text-align: center;
+}
+
+#cover {
+  width: 300px;
+  height: 450px;
+  background: linear-gradient(black, gray);
+  color: white;
+  margin: 20px auto;
+  padding: 20px;
+  display: block;
+}
+
+button {
+  margin: 5px;
+  padding: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<input id="title" placeholder="Book Title">
-<input id="author" placeholder="Author Name">
+<h2>📘 Book Cover Generator</h2>
+
+<input id="title" placeholder="Book Title"><br><br>
+<input id="author" placeholder="Author Name"><br><br>
+
 <button onclick="generate()">Generate</button>
-
-<div id="cover">
-  <h1 id="t"></h1>
-  <h3 id="a"></h3>
-</div>
-
-<script>
-function generate(){
-  document.getElementById("t").innerText =
-    document.getElementById("title").value;
-  document.getElementById("a").innerText =
-    document.getElementById("author").value;
-}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+<button onclick="downloadImage()">Download PNG</button>
 <button onclick="downloadPDF()">Download PDF</button>
 
-<script>
-async function downloadPDF(){
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
+<div id="cover">
+  <h2 id="t">Your Title</h2>
+  <p id="a">Author Name</p>
+</div>
 
-  pdf.text("My Book Content", 10, 10);
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+function generate() {
+  let title = document.getElementById("title").value;
+  let author = document.getElementById("author").value;
+
+  document.getElementById("t").innerText = title || "Sample Title";
+  document.getElementById("a").innerText = author || "Author Name";
+}
+
+function downloadImage() {
+  html2canvas(document.getElementById("cover")).then(canvas => {
+    let link = document.createElement("a");
+    link.download = "cover.png";
+    link.href = canvas.toDataURL();
+    link.click();
+  });
+}
+
+async function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  let pdf = new jsPDF();
+
+  await html2canvas(document.getElementById("cover")).then(canvas => {
+    let img = canvas.toDataURL("image/png");
+    pdf.addImage(img, 'PNG', 10, 10, 180, 260);
+  });
+
   pdf.save("book.pdf");
 }
-</script>
 </script>
 
 </body>
